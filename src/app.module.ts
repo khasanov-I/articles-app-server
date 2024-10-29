@@ -17,6 +17,9 @@ import { ArticleRatingsModule } from './article_ratings/article_ratings.module';
 import { ArticleRating } from './article_ratings/article_ratings.model';
 import { Comment } from './comments/comments.model';
 import { Profile } from './profile/profile.model';
+import { FileModule } from './file/file.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -59,6 +62,8 @@ import { Profile } from './profile/profile.model';
     ProfileModule,
     CommentsModule,
     ArticleRatingsModule,
+    FileModule,
+    ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, 'static')}),
   ],
 })
 export class AppModule {}

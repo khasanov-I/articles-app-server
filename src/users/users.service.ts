@@ -2,15 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './users.model';
 import { CreateUserDto } from './dto/create-user.dto';
+import { FileService, FileType } from 'src/file/file.service';
 
 @Injectable()
 export class UsersService {
 
-    constructor (@InjectModel(User) private userRepository: typeof User) {}
+    constructor (@InjectModel(User) private userRepository: typeof User,
+                private fileService: FileService) {}
 
-    async createUser(dto: CreateUserDto) {
-        const user = await this.userRepository.create({...dto, roles: ['USER']});
-        user.roles = ['USER']
+    async createUser(dto: CreateUserDto, picture) {
+        const picturePath = this.fileService.createFile(FileType.IMAGE, picture)
+        const user = await this.userRepository.create({...dto, roles: ['USER'], avatar: picturePath});
         return user;
     }
 

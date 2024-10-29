@@ -9,9 +9,10 @@ import { Article } from 'src/articles/articles.model';
 import { Profile } from 'src/profile/profile.model';
 import { Comment } from 'src/comments/comments.model';
 import { ArticleRating } from 'src/article_ratings/article_ratings.model';
+import { FileService } from 'src/file/file.service';
 
 @Module({
-  providers: [UsersService],
+  providers: [UsersService, FileService],
   controllers: [UsersController],
   imports: [
     SequelizeModule.forFeature([User, Notification, Article, Comment, Profile, ArticleRating]),
