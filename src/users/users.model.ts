@@ -4,6 +4,7 @@ import { Article } from "src/articles/articles.model";
 import { Comment } from "src/comments/comments.model";
 import { Notification } from "src/notifications/notifications.model";
 import { Profile } from "src/profile/profile.model";
+import { Token } from "src/token/token.model";
 
 export type roleType = 'ADMIN' | 'USER' | 'MANAGER'
 
@@ -49,4 +50,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
     @HasMany(() => ArticleRating)
     articleRatings: ArticleRating[]
+
+    @HasOne(() => Token)
+    token: Token
 }

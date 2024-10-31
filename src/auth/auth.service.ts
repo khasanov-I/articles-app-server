@@ -5,20 +5,29 @@ import { User } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs'
 import { LoginDto } from 'src/users/dto/login.dto';
+import { TokenService } from 'src/token/token.service';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
 
     constructor(private usersService: UsersService,
-                private jwtService: JwtService
+                private jwtService: JwtService,
+                private tokenService: TokenService
     ) {}
 
-    async login(userDto: LoginDto) {
+    async login(userDto: LoginDto, response: Response) {
         const user = await this.validateUser(userDto)
-        return this.generateToken(user)
+        const payload = {id: user.id, username: user.username, avatar: user.avatar, roles: user.roles}
+        const tokens = this.tokenService.generateTokens(payload)
+        await this.tokenService.saveToken(user.id, tokens.refreshToken)
+        response.cookie('refresh', tokens.refreshToken, {maxAge: 30 * 24* 60 * 60 * 1000, httpOnly: true})
+        return {
+            ...tokens
+        }
     }
 
-    async register(userDto: CreateUserDto, picture) {
+    async register(userDto: CreateUserDto, picture, response: Response) {
         const usernameCandidate = await this.usersService.getUserByUsername(userDto.username)
         if (usernameCandidate) {
             throw new HttpException('Пользователь с таким username уже существует', HttpStatus.BAD_REQUEST)
@@ -29,13 +38,12 @@ export class AuthService {
         }
         const hashPassword = await bcrypt.hash(userDto.password, 5)
         const user = await this.usersService.createUser({...userDto, password: hashPassword}, picture)
-        return this.generateToken(user)
-    }
-
-    private async generateToken(user: User) {
-        const payload = {username: user.username, id: user.id, roles: user.roles, avatar: user.avatar}
+        const payload = {id: user.id, username: user.username, avatar: user.avatar, roles: user.roles}
+        const tokens = this.tokenService.generateTokens(payload)
+        await this.tokenService.saveToken(user.id, tokens.refreshToken)
+        response.cookie('refresh', tokens.refreshToken, {maxAge: 30 * 24* 60 * 60 * 1000, httpOnly: true})
         return {
-            token: this.jwtService.sign(payload)
+            ...tokens
         }
     }
 

@@ -10,12 +10,13 @@ import { Profile } from 'src/profile/profile.model';
 import { Comment } from 'src/comments/comments.model';
 import { ArticleRating } from 'src/article_ratings/article_ratings.model';
 import { FileService } from 'src/file/file.service';
+import { Token } from 'src/token/token.model';
 
 @Module({
   providers: [UsersService, FileService],
   controllers: [UsersController],
   imports: [
-    SequelizeModule.forFeature([User, Notification, Article, Comment, Profile, ArticleRating]),
+    SequelizeModule.forFeature([User, Notification, Article, Comment, Profile, ArticleRating, Token]),
     forwardRef(() => AuthModule)
   ],
   exports: [UsersService]

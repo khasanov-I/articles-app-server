@@ -19,7 +19,10 @@ import { Comment } from './comments/comments.model';
 import { Profile } from './profile/profile.model';
 import { FileModule } from './file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { TokenModule } from './token/token.module';
 import * as path from 'path';
+import { Token } from './token/token.model';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -50,7 +53,7 @@ import * as path from 'path';
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
       models: [User, Article, ArticleBlock, Notification,
-        ArticleRating, Comment, Profile
+        ArticleRating, Comment, Profile, Token
       ],
       autoLoadModels: true,
     }),
@@ -64,6 +67,8 @@ import * as path from 'path';
     ArticleRatingsModule,
     FileModule,
     ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, 'static')}),
+    TokenModule,
+    MailModule,
   ],
 })
 export class AppModule {}
