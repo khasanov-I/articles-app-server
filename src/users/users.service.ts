@@ -13,6 +13,7 @@ export class UsersService {
     async createUser(dto: CreateUserDto, picture) {
         const picturePath = this.fileService.createFile(FileType.IMAGE, picture)
         const user = await this.userRepository.create({...dto, roles: ['USER'], avatar: picturePath});
+        await user.save()
         return user;
     }
 

@@ -1,17 +1,18 @@
-import { Body, Controller, Post, Res, UploadedFiles, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Body, Controller, Post, Res, Sse, UploadedFiles, UseInterceptors, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { CreateUserDtoWithLink } from 'src/users/dto/create-user.dto';
 import { LoginDto } from 'src/users/dto/login.dto';
 import { ValidationPipe } from 'src/pipes/validation.pipe';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { TokenService } from 'src/token/token.service';
 import { Response } from 'express';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { fromEvent, map, Observable } from 'rxjs';
 
 @Controller('auth')
 export class AuthController {
 
     constructor(private authService: AuthService,
-                private tokenService: TokenService
+                private eventEmitter: EventEmitter2,
     ) {}
 
     @UsePipes(ValidationPipe)
@@ -20,14 +21,24 @@ export class AuthController {
         return this.authService.login(userDto, response)
     }
 
+    @Sse('/register/listen')
+    listenIfActive(): Observable<string> {
+        return fromEvent(this.eventEmitter, 'activateEmail')
+            .pipe(map((id: string) => {
+                return id
+            }))
+    }
+
     @UsePipes(ValidationPipe)
     @Post('/register')
     @UseInterceptors(FileFieldsInterceptor([{
         name: 'avatar', maxCount: 1
     }]))
-    register(@UploadedFiles() file, @Body() userDto: CreateUserDto, @Res({ passthrough: true }) response: Response) {
+    register(@UploadedFiles() file, 
+            @Body() userDto: CreateUserDtoWithLink, 
+            @Res({ passthrough: true }) response: Response) {
         const {avatar} = file
-        return this.authService.register(userDto, avatar[0], response)
+        this.eventEmitter.removeAllListeners('activateEmail')
+        return this.authService.register(userDto, avatar[0], response)  
     }
-
 }

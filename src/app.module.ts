@@ -23,6 +23,7 @@ import { TokenModule } from './token/token.module';
 import * as path from 'path';
 import { Token } from './token/token.model';
 import { MailModule } from './mail/mail.module';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -56,6 +57,17 @@ import { MailModule } from './mail/mail.module';
         ArticleRating, Comment, Profile, Token
       ],
       autoLoadModels: true,
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        port: Number(process.env.EMAIL_PORT),
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD
+        },
+      }
     }),
     UsersModule,
     AuthModule,

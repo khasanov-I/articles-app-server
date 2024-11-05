@@ -7,6 +7,7 @@ import { TokenService } from 'src/token/token.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Token } from 'src/token/token.model';
 import { TokenModule } from 'src/token/token.module';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   controllers: [AuthController],
@@ -19,7 +20,8 @@ import { TokenModule } from 'src/token/token.module';
       signOptions: {
         expiresIn: '24h'
       }
-    })
+    }),
+    forwardRef(() => MailModule)
   ],
   exports: [
     AuthService, JwtModule
