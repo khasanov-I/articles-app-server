@@ -26,4 +26,30 @@ export class TokenService {
         const token = await this.tokenRepository.create({userId, refreshToken})
         return token
     }
+
+    async findToken(refreshToken) {
+        const token = await this.tokenRepository.findOne({where: {refreshToken}})
+        return token
+    }
+
+    async removeToken(refreshToken) {
+        await this.tokenRepository.destroy({where: {refreshToken}})
+        return true
+    }
+
+    validateAccessToken(accessToken) {
+        try {
+            return jwt.verify(accessToken, process.env.ACCESS_PRIVATE_KEY)
+        } catch (e) {
+            return null
+        }
+    }
+
+    validateRefreshToken(refreshToken) {
+        try {
+            return jwt.verify(refreshToken, process.env.REFRESH_PRIVATE_KEY)
+        } catch (e) {
+            return null
+        }
+    }
 }

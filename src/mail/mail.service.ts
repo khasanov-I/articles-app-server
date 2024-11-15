@@ -16,11 +16,15 @@ export class MailService {
     async sendMail(mailDto: MailDto, link: string) {
         const usernameCandidate = await this.usersService.getUserByUsername(mailDto.username)
         if (usernameCandidate) {
-            throw new HttpException('Пользователь с таким username уже существует', HttpStatus.BAD_REQUEST)
+            throw new HttpException({
+                usernameExists: 'Пользователь с таким username уже существует'
+            }, HttpStatus.BAD_REQUEST)
         }
         const emailCandidate = await this.usersService.getUserByEmail(mailDto.email)
         if (emailCandidate) {
-            throw new HttpException('Пользователь с таким email уже существует', HttpStatus.BAD_REQUEST)
+            throw new HttpException({
+                emailExists: 'Пользователь с таким email уже существует'
+            }, HttpStatus.BAD_REQUEST)
         }
         await this.mailService.sendMail({
             from: process.env.EMAIL_USERNAME,

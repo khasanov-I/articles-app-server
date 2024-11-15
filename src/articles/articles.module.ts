@@ -7,14 +7,12 @@ import { Article } from './articles.model';
 import { ArticleBlock } from 'src/articleblocks/articleblocks.model';
 import { Comment } from 'src/comments/comments.model';
 import { ArticleRating } from 'src/article_ratings/article_ratings.model';
-import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   providers: [ArticlesService],
   controllers: [ArticlesController],
   imports: [
     SequelizeModule.forFeature([User, Article, ArticleBlock, Comment, ArticleRating]),
-    JwtModule
   ]
 })
 export class ArticlesModule {}

@@ -1,20 +1,23 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('profile')
 export class ProfileController {
 
     constructor(private profileService: ProfileService) {}
 
-    @Post()
-    create(@Body() profileDto: CreateProfileDto) {
-        return this.profileService.createProfile(profileDto)
+    @UseGuards(JwtAuthGuard)
+    @Get('/:id')
+    getProfile(@Param('id') id: number) {
+        return this.profileService.getProfileByUserId(id)
     }
 
-    @Get('/:id')
-    getAll(@Param('id') id: number) {
-        return this.profileService.getProfileById(id)
+    @UseGuards(JwtAuthGuard)
+    @Get('/canBeChanged/:id')    
+    canChangeProfileData(@Param('id') id: number, accessToken: string) {
+        return this.profileService.canChangeProfileData(id, accessToken)
     }
 
 }

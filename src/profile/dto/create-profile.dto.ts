@@ -9,4 +9,5 @@ export class CreateProfileDto {
     readonly firstname: string;
     readonly currency: Currency;
     readonly country: Country;
+    readonly userId: number;
 }

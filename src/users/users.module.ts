@@ -11,13 +11,16 @@ import { Comment } from 'src/comments/comments.model';
 import { ArticleRating } from 'src/article_ratings/article_ratings.model';
 import { FileService } from 'src/file/file.service';
 import { Token } from 'src/token/token.model';
+import { ProfileService } from 'src/profile/profile.service';
+import { TokenModule } from 'src/token/token.module';
 
 @Module({
-  providers: [UsersService, FileService],
+  providers: [UsersService, FileService, ProfileService],
   controllers: [UsersController],
   imports: [
-    SequelizeModule.forFeature([User, Notification, Article, Comment, Profile, ArticleRating, Token]),
-    forwardRef(() => AuthModule)
+    SequelizeModule.forFeature([User, Notification, Article, Comment, Profile, ArticleRating]),
+    forwardRef(() => AuthModule),
+    TokenModule
   ],
   exports: [UsersService]
 })
