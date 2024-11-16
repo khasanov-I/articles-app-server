@@ -1,7 +1,5 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { MailDto } from './dto/create-mail.dto';
 

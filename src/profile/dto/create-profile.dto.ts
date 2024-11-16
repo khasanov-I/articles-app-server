@@ -4,7 +4,7 @@ export class CreateProfileDto {
     readonly avatar: string;
     readonly username: string;
     readonly city: string;
-    readonly age: number;
+    readonly age: string;
     readonly lastname: string;
     readonly firstname: string;
     readonly currency: Currency;

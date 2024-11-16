@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateUserDto, CreateUserDtoWithLink } from 'src/users/dto/create-user.dto';
+import { CreateUserDtoWithLink } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs'
@@ -8,6 +8,7 @@ import { TokenService } from 'src/token/token.service';
 import { Response } from 'express';
 import { MailService } from 'src/mail/mail.service';
 import { JwtPayload } from 'jsonwebtoken';
+import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 
 @Injectable()
 export class AuthService {
@@ -43,7 +44,7 @@ export class AuthService {
     async registerWithAvatar(userDto: CreateUserDtoWithLink, picture, response: Response) {
         const hashPassword = await bcrypt.hash(userDto.password, 5)
         const user = await this.usersService.createUserWithAvatar({...userDto, password: hashPassword}, picture)
-        const payload = {id: user.id, username: user.username, avatar: user.avatar, roles: user.roles}
+        const payload = {id: user.id, username: user.username, roles: user.roles}
         const tokens = this.tokenService.generateTokens(payload)
         await this.tokenService.saveToken(user.id, tokens.refreshToken)
         response.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24* 60 * 60 * 1000, httpOnly: true})
@@ -80,7 +81,6 @@ export class AuthService {
         const user = await this.usersService.getUserByUsername(userData.username)
         const payload = {id: user.id, username: user.username, roles: user.roles}
         const tokens = this.tokenService.generateTokens(payload)
-        console.log(tokens)
         await this.tokenService.saveToken(user.id, tokens.refreshToken)
         response.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24* 60 * 60 * 1000, httpOnly: true})
         return {

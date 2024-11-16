@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './users.model';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserAndProfileDto} from './dto/create-user.dto';
 import { FileService, FileType } from 'src/file/file.service';
 import { ProfileService } from 'src/profile/profile.service';
+import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -12,34 +13,34 @@ export class UsersService {
                 private fileService: FileService,
                 private profileService: ProfileService) {}
 
-    async createUserWithAvatar(dto: CreateUserDto, picture) {
+    async createUserWithAvatar(userDto: CreateUserAndProfileDto, picture) {
         const picturePath = this.fileService.createFile(FileType.IMAGE, picture)
-        const user = await this.userRepository.create({...dto, roles: ['USER'], avatar: picturePath});
+        const user = await this.userRepository.create({...userDto, roles: ['USER'], avatar: picturePath});
         await this.profileService.createProfile({
             avatar: user.avatar,
-            age: 20,
-            username: user.username,
-            city: 'Moscow',
-            lastname: 'AAABRRW',
-            firstname: 'WBR',
-            currency: 'RUB',
-            country: 'Russia',
+            age: userDto.age,
+            username: userDto.username,
+            city: userDto.city,
+            lastname: userDto.lastname,
+            firstname: userDto.firstname,
+            currency: userDto.currency,
+            country: userDto.country,
             userId: user.id
         })
         return user;
     }
 
-    async createUserWithoutAvatar(dto: CreateUserDto) {
-        const user = await this.userRepository.create({...dto, roles: ['USER']});
+    async createUserWithoutAvatar(userDto: CreateUserAndProfileDto) {
+        const user = await this.userRepository.create({...userDto, roles: ['USER']});
         await this.profileService.createProfile({
-            avatar: user.avatar,
-            age: 20,
-            username: user.username,
-            city: 'Moscow',
-            lastname: 'AAABRRW',
-            firstname: 'WBR',
-            currency: 'RUB',
-            country: 'Russia',
+            avatar: null,
+            age: userDto.age,
+            username: userDto.username,
+            city: userDto.city,
+            lastname: userDto.lastname,
+            firstname: userDto.firstname,
+            currency: userDto.currency,
+            country: userDto.country,
             userId: user.id
         })
         return user;

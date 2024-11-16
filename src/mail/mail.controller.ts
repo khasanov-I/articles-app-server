@@ -17,7 +17,7 @@ export class MailController {
     @Post()
     sendMail(@Body() sendMailDto: MailDto) {
         const link = uuid.v4()
-        return this.mailService.sendMail({username: sendMailDto.username, email: sendMailDto.email, password: sendMailDto.password}, link)
+        return this.mailService.sendMail({...sendMailDto}, link)
     }
 
     @Post('/:id')

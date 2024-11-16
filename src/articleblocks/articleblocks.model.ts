@@ -1,7 +1,5 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript"
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript"
 import { Article } from "src/articles/articles.model";
-import { Notification } from "src/notifications/notifications.model";
-import { User } from "src/users/users.model";
 
 type ArticleBlockCreationAttrs = {
     type: 'IMAGE' | 'CODE' | 'TEXT';

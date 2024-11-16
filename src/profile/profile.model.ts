@@ -11,7 +11,7 @@ type ProfileCreationAttrs = {
     avatar: string,
     username: string,
     city: string,
-    age: number,
+    age: string,
     lastname: string,
     firstname: string,
     currency: Currency,
@@ -40,8 +40,8 @@ export class Profile extends Model<Profile, ProfileCreationAttrs> {
     @Column({type: DataType.STRING, allowNull: false})
     city: string;
 
-    @Column({type: DataType.INTEGER, allowNull: false})
-    age: number;
+    @Column({type: DataType.STRING, allowNull: false})
+    age: string;
 
     @Column({type: DataType.STRING, allowNull: false})
     lastname: string;

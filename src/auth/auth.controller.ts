@@ -37,6 +37,7 @@ export class AuthController {
             @Body() userDto: CreateUserDtoWithLink, 
             @Res({ passthrough: true }) response: Response) {
         const {avatar} = file
+        console.log(avatar)
         this.eventEmitter.removeAllListeners('activateEmail')
         if (!avatar) {
             return this.authService.registerWithoutAvatar(userDto, response)  
