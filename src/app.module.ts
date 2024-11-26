@@ -8,9 +8,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { Notification } from './notifications/notifications.model';
 import { ArticlesModule } from './articles/articles.module';
-import { ArticleblocksModule } from './articleblocks/articleblocks.module';
 import { Article } from './articles/articles.model';
-import { ArticleBlock } from './articleblocks/articleblocks.model';
 import { ProfileModule } from './profile/profile.module';
 import { CommentsModule } from './comments/comments.module';
 import { ArticleRatingsModule } from './article_ratings/article_ratings.module';
@@ -24,6 +22,7 @@ import * as path from 'path';
 import { Token } from './token/token.model';
 import { MailModule } from './mail/mail.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -53,7 +52,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Article, ArticleBlock, Notification,
+      models: [User, Article, Notification,
         ArticleRating, Comment, Profile, Token
       ],
       autoLoadModels: true,
@@ -73,7 +72,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
     AuthModule,
     NotificationsModule,
     ArticlesModule,
-    ArticleblocksModule,
     ProfileModule,
     CommentsModule,
     ArticleRatingsModule,

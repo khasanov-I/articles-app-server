@@ -1,8 +1,8 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript"
+import { AllowNull, BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript"
 import { ArticleRating } from "src/article_ratings/article_ratings.model";
-import { ArticleBlock } from "src/articleblocks/articleblocks.model";
 import { Comment } from "src/comments/comments.model";
 import { User } from "src/users/users.model";
+import { ArticleBlockCreationAttrs } from "./dto/create-article.dto";
 
 export type ArticleType = 'ALL' | 'IT' | 'SCIENCE' | 'ECONOMICS'
 
@@ -10,8 +10,10 @@ type ArticleCreationAttrs = {
     title: string,
     subtitle: string,
     img: string,
+    views: number,
     userId: number,
     type: ArticleType[],
+    blocks: ArticleBlockCreationAttrs[]
 }
 
 @Table({tableName: 'articles'})
@@ -32,13 +34,10 @@ export class Article extends Model<Article, ArticleCreationAttrs> {
     views: number;
 
     @Column({type: DataType.STRING, allowNull: false})
-    createdAt: string;
+    type: ArticleType
 
-    @Column({type: DataType.ARRAY(DataType.STRING), allowNull: false})
-    type: ArticleType[]
-
-    @HasMany(() => ArticleBlock)
-    articleBlocks: ArticleBlock[]
+    @Column({type: DataType.ARRAY(DataType.JSON), allowNull: false})
+    blocks: ArticleBlockCreationAttrs[]
 
     @HasMany(() => Comment)
     comments: Comment[]

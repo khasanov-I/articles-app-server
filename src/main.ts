@@ -3,10 +3,12 @@ import { AppModule } from './app.module';
 import { User } from './users/users.model';
 const cors = require('cors')
 import * as cookieParser from 'cookie-parser'
+import { Article } from './articles/articles.model';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // User.sync({alter: true})
+  // Article.sync({alter: true})
   app.use(cors({
     credentials: true,
     origin: process.env.CLIENT_URL

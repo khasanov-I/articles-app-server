@@ -1,6 +1,4 @@
 import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript"
-import { ArticleBlock } from "src/articleblocks/articleblocks.model";
-import { Article } from "src/articles/articles.model";
 import { User } from "src/users/users.model";
 
 type TokenCreationAttrs = {

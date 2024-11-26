@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreateArticleDto } from './dto/create-article.dto';
 import { ArticlesService } from './articles.service';
+import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { CreateArticleDto } from './dto/create-article.dto';
 
 @Controller('articles')
 export class ArticlesController {
@@ -10,8 +11,13 @@ export class ArticlesController {
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    create(@Body() articleDto: CreateArticleDto) {
-        return this.articlesService.createArticle(articleDto)
+    @UseInterceptors(FileFieldsInterceptor([
+        { name: 'img', maxCount: 1 },
+        { name: 'files[]' },
+      ]))
+    create( @UploadedFiles() avatars: { img?: Express.Multer.File[], 'files[]'?: Express.Multer.File[] },
+            @Body() articleDto: CreateArticleDto) {
+        return this.articlesService.createArticle(articleDto, avatars)
     }
 
     @Get()
