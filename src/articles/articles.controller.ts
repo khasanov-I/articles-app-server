@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UploadedFile, UploadedFiles, UseGuards, UseInterceptors, UsePipes } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ArticlesService } from './articles.service';
 import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { CreateArticleDto } from './dto/create-article.dto';
+import { CreateArticleDto, GetArticlesQueryType } from './dto/create-article.dto';
+import { ValidationPipe } from 'src/pipes/validation.pipe';
 
 @Controller('articles')
 export class ArticlesController {
@@ -17,12 +18,18 @@ export class ArticlesController {
       ]))
     create( @UploadedFiles() avatars: { img?: Express.Multer.File[], 'files[]'?: Express.Multer.File[] },
             @Body() articleDto: CreateArticleDto) {
+                
         return this.articlesService.createArticle(articleDto, avatars)
     }
 
     @Get()
-    getAll() {
-        return this.articlesService.getAllArticles()
+    getAll(@Query() query: GetArticlesQueryType) {
+        return this.articlesService.getAllArticles(query)
+    }
+
+    @Get('/:id')
+    getArticleById(@Param('id') id: string) {
+        return this.articlesService.getArticleById(id)
     }
 
 }

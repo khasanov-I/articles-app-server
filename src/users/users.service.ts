@@ -31,7 +31,7 @@ export class UsersService {
     }
 
     async createUserWithoutAvatar(userDto: CreateUserAndProfileDto) {
-        const user = await this.userRepository.create({...userDto, roles: ['USER']});
+        const user = await this.userRepository.create({...userDto, roles: ['USER'], avatar: null});
         await this.profileService.createProfile({
             avatar: null,
             age: userDto.age,

@@ -20,7 +20,7 @@ export class AuthService {
 
     async login(userDto: LoginDto, response: Response) {
         const user = await this.validateUser(userDto)
-        const payload = {id: user.id, username: user.username, roles: user.roles}
+        const payload = {id: user.id, username: user.username, roles: user.roles, avatar: user.avatar}
         const tokens = this.tokenService.generateTokens(payload)
         await this.tokenService.saveToken(user.id, tokens.refreshToken)
         response.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24* 60 * 60 * 1000, httpOnly: true})
@@ -43,8 +43,9 @@ export class AuthService {
 
     async registerWithAvatar(userDto: CreateUserDtoWithLink, picture, response: Response) {
         const hashPassword = await bcrypt.hash(userDto.password, 5)
+        console.log(userDto)
         const user = await this.usersService.createUserWithAvatar({...userDto, password: hashPassword}, picture)
-        const payload = {id: user.id, username: user.username, roles: user.roles}
+        const payload = {id: user.id, username: user.username, roles: user.roles, avatar: user.avatar}
         const tokens = this.tokenService.generateTokens(payload)
         await this.tokenService.saveToken(user.id, tokens.refreshToken)
         response.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24* 60 * 60 * 1000, httpOnly: true})
@@ -79,7 +80,7 @@ export class AuthService {
             throw new UnauthorizedException({message: 'Пользователь не авторизован'})
         }
         const user = await this.usersService.getUserByUsername(userData.username)
-        const payload = {id: user.id, username: user.username, roles: user.roles}
+        const payload = {id: user.id, username: user.username, roles: user.roles, avatar: user.avatar}
         const tokens = this.tokenService.generateTokens(payload)
         await this.tokenService.saveToken(user.id, tokens.refreshToken)
         response.cookie('refreshToken', tokens.refreshToken, {maxAge: 30 * 24* 60 * 60 * 1000, httpOnly: true})

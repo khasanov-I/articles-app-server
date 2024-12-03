@@ -1,14 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Article } from './articles.model';
-import { ArticleBlockCreationAttrs, CreateArticleDto } from './dto/create-article.dto';
+import { ArticleBlockCreationAttrs, CreateArticleDto, GetArticlesQueryType } from './dto/create-article.dto';
 import { FileService, FileType } from 'src/file/file.service';
+import { User } from 'src/users/users.model';
+import { Op } from 'sequelize';
+import { ProfileService } from 'src/profile/profile.service';
+import { ArticleType } from './articles.model';
 
 @Injectable()
 export class ArticlesService {
 
     constructor (@InjectModel(Article) private articleRepository: typeof Article,
-                private fileService: FileService) {}
+                private fileService: FileService,
+                private profileService: ProfileService) {}
 
     async createArticle(dto: CreateArticleDto, avatars: { img?: Express.Multer.File[], 'files[]'?: Express.Multer.File[] }) {
 
@@ -26,14 +31,35 @@ export class ArticlesService {
 
         const articleImg = this.fileService.createFile(FileType.IMAGE, avatars.img[0])        
 
-        const article = await this.articleRepository.create({...dto, blocks: articleBlocks, img: articleImg, views: 0});
+        const profile = await this.profileService.getProfileByUserId(dto.userId)
 
-        return article;
+        await this.articleRepository.create({...dto, blocks: articleBlocks, img: articleImg, views: 0, profileId: profile.id});
+
+        return profile.id
     }
 
-    async getAllArticles() {
-        const articles = await this.articleRepository.findAll()
+    async getAllArticles(query: GetArticlesQueryType) {
+        const articles = await this.articleRepository.findAll(
+            {
+            limit: query.limit,
+            order: [[query.sort, query.order]],
+            offset: query.page - 1,
+            where: (() => {return query.type === 'ALL' ? {
+                // title: {[Op.regexp]: query.q},
+                [Op.or]: [{title: {[Op.iRegexp]: query.q}}, {subtitle: {[Op.iRegexp]: query.q}}],
+            } : {
+                [Op.or]: [{title: {[Op.iRegexp]: query.q}}, {subtitle: {[Op.iRegexp]: query.q}}],
+                type: query.type
+            }
+            })()
+        }
+        )
+        
         return articles;
+    }
+
+    async getArticleById(id: string) {
+        return this.articleRepository.findByPk(id)
     }
 
     putFilenamesIntoBlocks(blocks: ArticleBlockCreationAttrs[], filenames: string[]): ArticleBlockCreationAttrs[] {

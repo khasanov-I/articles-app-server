@@ -76,7 +76,8 @@ import { MulterModule } from '@nestjs/platform-express';
     CommentsModule,
     ArticleRatingsModule,
     FileModule,
-    ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, 'static')}),
+    // ТУТ В ПРОДЕ ПО ДРУГОМУ
+    ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, '..', 'static')}),
     TokenModule,
     MailModule,
   ],

@@ -1,4 +1,4 @@
-import { ArticleType } from "../articles.model";
+import { ArticleOrder, ArticleSort, ArticleType } from "../articles.model";
 
 export class CreateArticleDto {
     readonly title: string;
@@ -6,6 +6,8 @@ export class CreateArticleDto {
     readonly userId: number;
     readonly type: ArticleType[];
     readonly blocks: string;
+    readonly authorAvatar: string;
+    readonly authorUsername: string;
 }
 
 export type ArticleBlockCreationAttrs = {
@@ -16,3 +18,12 @@ export type ArticleBlockCreationAttrs = {
     title?: string;
     paragraphs?: string[];
 };
+
+export type GetArticlesQueryType = {
+    limit: number,
+    page: number,
+    sort: ArticleSort,
+    q: string,
+    type: ArticleType,
+    order: ArticleOrder
+}

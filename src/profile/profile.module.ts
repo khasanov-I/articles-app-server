@@ -12,6 +12,6 @@ import { Token } from 'src/token/token.model';
   controllers: [ProfileController],
   providers: [ProfileService],
   imports: [SequelizeModule.forFeature([Profile, User]),
-            TokenModule]
+            TokenModule],
 })
 export class ProfileModule {}
