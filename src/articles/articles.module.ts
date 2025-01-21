@@ -11,12 +11,13 @@ import { ProfileService } from 'src/profile/profile.service';
 import { Profile } from 'src/profile/profile.model';
 import { Token } from 'src/token/token.model';
 import { TokenService } from 'src/token/token.service';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
-  providers: [ArticlesService, FileService, ProfileService, TokenService],
+  providers: [ArticlesService, FileService, ProfileService, UsersService],
   controllers: [ArticlesController],
   imports: [
-    SequelizeModule.forFeature([User, Article, Comment, ArticleRating, Profile, Token]),
+    SequelizeModule.forFeature([User, Article, Comment, ArticleRating, Profile]),
   ]
 })
 export class ArticlesModule {}

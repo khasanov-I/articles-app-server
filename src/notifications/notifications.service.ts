@@ -14,7 +14,8 @@ export class NotificationsService {
 
     async create(dto: CreateNotificationDto) {
         const notification = await this.notificationRepository.create({...dto})
-        this.eventEmitter.emit('newNotification', notification)
+        this.eventEmitter.emit(`newNotification${dto.userId}`, notification)
+        console.log(notification)
         return notification
     }
 

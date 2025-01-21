@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { ArticleRating } from './article_ratings.model';
 import { CreateArticleRatingsDto } from './dto/create-article_ratings.dto';
@@ -15,6 +15,7 @@ export class ArticleRatingsService {
 
     async getArticleRating(articleId: number, userId: number) {
         const articleRating = await this.articleRatingRepository.findOne({where: {articleId, userId}})
+        console.log(articleRating)
         return articleRating;
     }
 

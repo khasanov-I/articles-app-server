@@ -8,8 +8,7 @@ import { JwtPayload } from 'jsonwebtoken';
 @Injectable()
 export class ProfileService {
 
-    constructor (@InjectModel(Profile) private profileRepository: typeof Profile,
-                private tokenService: TokenService) {}
+    constructor (@InjectModel(Profile) private profileRepository: typeof Profile) {}
 
     async createProfile(dto: CreateProfileDto) {
         const profile = await this.profileRepository.create({...dto});
@@ -19,13 +18,5 @@ export class ProfileService {
     async getProfileByUserId(id: number) {
         const profile = await this.profileRepository.findOne({where: {userId: id}})
         return profile;
-    }
-
-    async canChangeProfileData(id: number, accessToken: string) {
-        const data = this.tokenService.validateAccessToken(accessToken) as JwtPayload
-        if (Number(data.id) === id) {
-            return true
-        }
-        return false
     }
 }

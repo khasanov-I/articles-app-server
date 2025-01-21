@@ -7,13 +7,15 @@ import { User } from 'src/users/users.model';
 import { Op } from 'sequelize';
 import { ProfileService } from 'src/profile/profile.service';
 import { ArticleType } from './articles.model';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class ArticlesService {
 
     constructor (@InjectModel(Article) private articleRepository: typeof Article,
                 private fileService: FileService,
-                private profileService: ProfileService) {}
+                private profileService: ProfileService,
+                private usersService: UsersService) {}
 
     async createArticle(dto: CreateArticleDto, avatars: { img?: Express.Multer.File[], 'files[]'?: Express.Multer.File[] }) {
 
@@ -38,12 +40,18 @@ export class ArticlesService {
         return profile.id
     }
 
+    async getArticleAuthorId(articleId: number) {
+        const article = await this.articleRepository.findOne({where: {id: articleId}})
+        const author = await this.usersService.getUserByUsername(article.authorUsername)
+        return author.id
+    }
+
     async getAllArticles(query: GetArticlesQueryType) {
         const articles = await this.articleRepository.findAll(
             {
             limit: query.limit,
-            order: [[query.sort, query.order]],
-            offset: query.page - 1,
+            order: [[query.sort, query.order], ['createdAt', 'asc']],
+            offset: query.page,
             where: (() => {return query.type === 'ALL' ? {
                 // title: {[Op.regexp]: query.q},
                 [Op.or]: [{title: {[Op.iRegexp]: query.q}}, {subtitle: {[Op.iRegexp]: query.q}}],
@@ -54,12 +62,33 @@ export class ArticlesService {
             })()
         }
         )
+        articles.map(e => {
+            console.log(e.id)
+        })
         
         return articles;
     }
 
+    async getAllArticlesByProfileId(id: string) {
+        const articles = await this.articleRepository.findAll({
+            where: {
+                profileId: id
+            }
+        })
+        return articles;
+    }
+
+
     async getArticleById(id: string) {
-        return this.articleRepository.findByPk(id)
+        const article = this.articleRepository.findByPk(id)
+        this.articleRepository.update({
+            views: (await article).views + 1
+        }, {
+            where: {
+                id
+            }
+        })
+        return article
     }
 
     putFilenamesIntoBlocks(blocks: ArticleBlockCreationAttrs[], filenames: string[]): ArticleBlockCreationAttrs[] {

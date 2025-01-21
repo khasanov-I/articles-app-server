@@ -1,9 +1,9 @@
-import { Body, Controller, Get, Param, Post, Sse } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, Sse } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { fromEvent, map, Observable } from 'rxjs';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { Notification } from './notifications.model';
+import { type Request } from 'express';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -22,11 +22,17 @@ export class NotificationsController {
         return this.notificationService.getNotificationsByUserId(value)
     }
 
-    @Sse('/connect/subscribe')
-    getNewNotification(): Observable<MessageEvent> {
-        return fromEvent(this.eventEmitter, 'newNotification')
-            .pipe(map((notification: Notification) => {
+    @Sse('/connect/subscribe/:id')
+    getNewNotification(@Req() req: Request, @Param('id') id: string): Observable<MessageEvent> {
+        // req.on('close', () => {
+        //     console.log('close')
+        // })
+
+        return fromEvent(this.eventEmitter, `newNotification${id}`)
+            .pipe(map((notification: CreateNotificationDto) => {
+                console.log(id)
                 return {data: notification} as MessageEvent
             }))
     }
+
 }

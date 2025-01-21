@@ -5,7 +5,10 @@ import { User } from "src/users/users.model";
 type CommentCreationAttrs = {
     text: string,
     articleId: number,
-    userId: number
+    userId: number,
+    profileId: number;
+    profileAvatar: string;
+    profileUsername: string;
 }
 
 @Table({tableName: 'comments'})
@@ -15,6 +18,15 @@ export class Comment extends Model<Comment, CommentCreationAttrs> {
 
     @Column({type: DataType.STRING, allowNull: false})
     text: string;
+
+    @Column({type: DataType.INTEGER})
+    profileId: number;
+
+    @Column({type: DataType.STRING})
+    profileAvatar: string;
+
+    @Column({type: DataType.STRING})
+    profileUsername: string;
 
     @ForeignKey(() => Article)
     @Column({type: DataType.INTEGER})

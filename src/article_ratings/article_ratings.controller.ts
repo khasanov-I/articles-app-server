@@ -14,7 +14,6 @@ export class ArticleRatingsController {
         return this.articleRatingsService.createArticleRating(articleRatingsDto)
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get('/:articleId/:userId')
     getAll(@Param('articleId') articleId: number, @Param('userId') userId: number) {
         return this.articleRatingsService.getArticleRating(articleId, userId)

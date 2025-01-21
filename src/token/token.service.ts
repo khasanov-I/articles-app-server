@@ -9,7 +9,7 @@ export class TokenService {
     constructor(@InjectModel(Token) private tokenRepository: typeof Token) {}
 
     generateTokens(payload) {
-        const accessToken = jwt.sign(payload, process.env.ACCESS_PRIVATE_KEY, {expiresIn: '30m'})
+        const accessToken = jwt.sign(payload, process.env.ACCESS_PRIVATE_KEY, {expiresIn: '15m'})
         const refreshToken = jwt.sign(payload, process.env.REFRESH_PRIVATE_KEY, {expiresIn: '30d'})
         
         return {

@@ -7,12 +7,16 @@ function App() {
   const [messages, setMessages] = useState([])
     const [value, setValue] = useState('')
 
+    const func = () => {
+        
+    }
+
     useEffect(() => {
         subscribe()
     }, [])
 
     const subscribe = async () => {
-        const eventSource = new EventSource('http://localhost:5000/notifications/connect/subscribe')
+        const eventSource = new EventSource('http://localhost:5000/notifications/connect/subscribe' + '/' + new Date().toLocaleTimeString())
         eventSource.onmessage = function (event) {
             const message = JSON.parse(event.data)
             console.log(message)

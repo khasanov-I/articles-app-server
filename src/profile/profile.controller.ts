@@ -13,11 +13,4 @@ export class ProfileController {
     getProfile(@Param('id') id: number) {
         return this.profileService.getProfileByUserId(id)
     }
-
-    @UseGuards(JwtAuthGuard)
-    @Get('/canBeChanged/:id')    
-    canChangeProfileData(@Param('id') id: number, accessToken: string) {
-        return this.profileService.canChangeProfileData(id, accessToken)
-    }
-
 }
