@@ -7,7 +7,5 @@ export class CreateProfileDto {
     readonly age: string;
     readonly lastname: string;
     readonly firstname: string;
-    readonly currency: Currency;
-    readonly country: Country;
     readonly userId: number;
 }

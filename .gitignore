@@ -5,6 +5,7 @@
 /static
 /.development.env
 /.production.env
+volumes
 
 # Logs
 logs

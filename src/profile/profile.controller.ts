@@ -8,7 +8,7 @@ export class ProfileController {
 
     constructor(private profileService: ProfileService) {}
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Get('/:id')
     getProfile(@Param('id') id: number) {
         return this.profileService.getProfileByUserId(id)

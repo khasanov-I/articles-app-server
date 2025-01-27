@@ -1,0 +1,44 @@
+services:
+  main:
+    container_name: main
+    build:
+      context: .
+      target: development
+    command: npm run start:dev
+    env_file: [ .env ]
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - ${PORT}:${PORT}
+    # networks:
+    #   - webnet
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    # networks:
+    #   - webnet
+    env_file: [ .env ]
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+      - ./docker/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgamin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:  
+      - "5050:80"
+# networks:
+  # webnet:
+volumes:
+  postgres_data:

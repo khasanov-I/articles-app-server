@@ -23,8 +23,6 @@ export class UsersService {
             city: userDto.city,
             lastname: userDto.lastname,
             firstname: userDto.firstname,
-            currency: userDto.currency,
-            country: userDto.country,
             userId: user.id
         })
         return user;
@@ -39,8 +37,6 @@ export class UsersService {
             city: userDto.city,
             lastname: userDto.lastname,
             firstname: userDto.firstname,
-            currency: userDto.currency,
-            country: userDto.country,
             userId: user.id
         })
         return user;

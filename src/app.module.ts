@@ -55,7 +55,7 @@ import { MulterModule } from '@nestjs/platform-express';
       models: [User, Article, Notification,
         ArticleRating, Comment, Profile, Token
       ],
-      autoLoadModels: true,
+      // autoLoadModels: true
     }),
     MailerModule.forRoot({
       transport: {

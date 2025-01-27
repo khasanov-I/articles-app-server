@@ -48,10 +48,4 @@ export class Profile extends Model<Profile, ProfileCreationAttrs> {
 
     @Column({type: DataType.STRING, allowNull: false})
     firstname: string;
-
-    @Column({type: DataType.STRING, allowNull: false})
-    currency: Currency
-
-    @Column({type: DataType.STRING, allowNull: false})
-    country: Country
 }

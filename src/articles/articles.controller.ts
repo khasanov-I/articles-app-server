@@ -27,6 +27,11 @@ export class ArticlesController {
         return this.articlesService.getAllArticles(query)
     }
 
+    @Get('/a/b/c')
+    get() {
+        return 'articles'
+    }
+
     @Get('/byProfileId/:id')
     getArticlesByProfileId(@Param('id') id: string) {
         return this.articlesService.getAllArticlesByProfileId(id)

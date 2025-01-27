@@ -28,10 +28,6 @@ export class CreateUserDtoWithLink {
 
     @IsString({message: 'Должно быть строкой'})
     readonly firstname: string
-
-    readonly currency: Currency
-
-    readonly country: Country
 }
 
 export class CreateUserAndProfileDto {
@@ -59,8 +55,4 @@ export class CreateUserAndProfileDto {
 
     @IsString({message: 'Должно быть строкой'})
     readonly firstname: string
-
-    readonly currency: Currency
-
-    readonly country: Country
 }
