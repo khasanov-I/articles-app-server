@@ -22,7 +22,6 @@ import * as path from 'path';
 import { Token } from './token/token.model';
 import { MailModule } from './mail/mail.module';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -61,12 +60,12 @@ import { MulterModule } from '@nestjs/platform-express';
       transport: {
         host: process.env.EMAIL_HOST,
         port: Number(process.env.EMAIL_PORT),
-        secure: false,
+        secure: true,
         auth: {
           user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD
-        },
-      }
+          pass: process.env.EMAIL_PASSWORD,
+        }
+      },
     }),
     UsersModule,
     AuthModule,

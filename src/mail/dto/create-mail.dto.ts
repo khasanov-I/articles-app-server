@@ -25,10 +25,4 @@ export class MailDto {
 
     @IsString({message: 'Должно быть строкой'})
     readonly firstname: string
-
-    @IsString({message: 'Должно быть строкой'})
-    readonly currency: string
-    
-    @IsString({message: 'Должно быть строкой'})
-    readonly country: string
 }
