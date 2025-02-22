@@ -22,6 +22,7 @@ import * as path from 'path';
 import { Token } from './token/token.model';
 import { MailModule } from './mail/mail.module';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { SwaggerModule } from '@nestjs/swagger';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, '..', 'static')}),
     TokenModule,
     MailModule,
+    SwaggerModule
   ],
 })
 export class AppModule {}

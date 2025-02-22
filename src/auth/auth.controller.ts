@@ -7,6 +7,12 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { Request, Response } from 'express';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { fromEvent, map, Observable } from 'rxjs';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+
+class Tokens {
+    accessToken: string
+    refreshToken: string
+}
 
 @Controller('auth')
 export class AuthController {
@@ -16,11 +22,15 @@ export class AuthController {
     ) {}
 
     @UsePipes(ValidationPipe)
+    @ApiOperation({summary: 'Авторизация'})
+    @ApiResponse({status: 200, type: Tokens})
     @Post('/login')
     login(@Body() userDto: LoginDto, @Res({ passthrough: true }) response: Response) {
         return this.authService.login(userDto, response)
     }
 
+    @ApiOperation({summary: 'Ожидание активации аккаунта по почте'})
+    @ApiResponse({status: 200, type: Observable<String>})
     @Sse('/register/listen')
     listenIfActive(): Observable<string> {
         return fromEvent(this.eventEmitter, 'activateEmail')
@@ -29,6 +39,8 @@ export class AuthController {
             }))
     }
 
+    @ApiOperation({summary: 'Регистрация'})
+    @ApiResponse({status: 200, type: Tokens})
     @Post('/register')
     @UseInterceptors(FileFieldsInterceptor([{
         name: 'avatar', maxCount: 1
@@ -44,6 +56,8 @@ export class AuthController {
         return this.authService.registerWithAvatar(userDto, avatar[0], response)  
     }
     
+    @ApiOperation({summary: 'Выход из аккаунта'})
+    @ApiResponse({status: 200, type: Boolean})
     @Post('/logout')
     logout(@Req() request: Request,
            @Res({ passthrough: true }) response: Response) {
@@ -52,6 +66,8 @@ export class AuthController {
         return this.authService.logout(refreshToken)
     }
 
+    @ApiOperation({summary: 'Обновление jwt токена'})
+    @ApiResponse({status: 200, type: Tokens})
     @Get('/refresh')
     refresh(@Req() request: Request,
             @Res({ passthrough: true }) response: Response) {
